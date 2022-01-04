@@ -1,4 +1,4 @@
-package ulb.lisa.infoh400.labs2020.controller.exceptions;
+package ulb.lisa.infoh400.labs2022.controller.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;

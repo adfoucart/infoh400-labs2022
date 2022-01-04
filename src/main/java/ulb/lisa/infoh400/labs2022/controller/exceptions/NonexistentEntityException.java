@@ -1,4 +1,4 @@
-package ulb.lisa.infoh400.labs2020.controller.exceptions;
+package ulb.lisa.infoh400.labs2022.controller.exceptions;
 
 public class NonexistentEntityException extends Exception {
     public NonexistentEntityException(String message, Throwable cause) {

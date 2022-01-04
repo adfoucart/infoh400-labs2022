@@ -91,7 +91,7 @@
         <Property name="text" type="java.lang.String" value="Add Patient"/>
       </Properties>
     </Component>
-    <Component class="ulb.lisa.infoh400.labs2020.view.AddPersonPanel" name="addPersonPanel">
+    <Component class="ulb.lisa.infoh400.labs2022.view.AddPersonPanel" name="addPersonPanel">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>

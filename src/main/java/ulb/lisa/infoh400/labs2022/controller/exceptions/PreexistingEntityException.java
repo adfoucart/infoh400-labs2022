@@ -1,4 +1,4 @@
-package ulb.lisa.infoh400.labs2020.controller.exceptions;
+package ulb.lisa.infoh400.labs2022.controller.exceptions;
 
 public class PreexistingEntityException extends Exception {
     public PreexistingEntityException(String message, Throwable cause) {

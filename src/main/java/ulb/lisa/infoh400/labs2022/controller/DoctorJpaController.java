@@ -3,31 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ulb.lisa.infoh400.labs2020.controller;
+package ulb.lisa.infoh400.labs2022.controller;
 
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import ulb.lisa.infoh400.labs2020.model.Person;
-import ulb.lisa.infoh400.labs2020.model.Image;
+import ulb.lisa.infoh400.labs2022.model.Person;
+import ulb.lisa.infoh400.labs2022.model.Image;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import ulb.lisa.infoh400.labs2020.controller.exceptions.IllegalOrphanException;
-import ulb.lisa.infoh400.labs2020.controller.exceptions.NonexistentEntityException;
-import ulb.lisa.infoh400.labs2020.model.Appointment;
-import ulb.lisa.infoh400.labs2020.model.Patient;
+import ulb.lisa.infoh400.labs2022.controller.exceptions.IllegalOrphanException;
+import ulb.lisa.infoh400.labs2022.controller.exceptions.NonexistentEntityException;
+import ulb.lisa.infoh400.labs2022.model.Appointment;
+import ulb.lisa.infoh400.labs2022.model.Doctor;
 
 /**
  *
  * @author Adrien Foucart
  */
-public class PatientJpaController implements Serializable {
+public class DoctorJpaController implements Serializable {
 
-    public PatientJpaController(EntityManagerFactory emf) {
+    public DoctorJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     private EntityManagerFactory emf = null;
@@ -36,55 +36,55 @@ public class PatientJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Patient patient) {
-        if (patient.getImageList() == null) {
-            patient.setImageList(new ArrayList<Image>());
+    public void create(Doctor doctor) {
+        if (doctor.getImageList() == null) {
+            doctor.setImageList(new ArrayList<Image>());
         }
-        if (patient.getAppointmentList() == null) {
-            patient.setAppointmentList(new ArrayList<Appointment>());
+        if (doctor.getAppointmentList() == null) {
+            doctor.setAppointmentList(new ArrayList<Appointment>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Person idperson = patient.getIdperson();
+            Person idperson = doctor.getIdperson();
             if (idperson != null) {
                 idperson = em.getReference(idperson.getClass(), idperson.getIdperson());
-                patient.setIdperson(idperson);
+                doctor.setIdperson(idperson);
             }
             List<Image> attachedImageList = new ArrayList<Image>();
-            for (Image imageListImageToAttach : patient.getImageList()) {
+            for (Image imageListImageToAttach : doctor.getImageList()) {
                 imageListImageToAttach = em.getReference(imageListImageToAttach.getClass(), imageListImageToAttach.getIdimage());
                 attachedImageList.add(imageListImageToAttach);
             }
-            patient.setImageList(attachedImageList);
+            doctor.setImageList(attachedImageList);
             List<Appointment> attachedAppointmentList = new ArrayList<Appointment>();
-            for (Appointment appointmentListAppointmentToAttach : patient.getAppointmentList()) {
+            for (Appointment appointmentListAppointmentToAttach : doctor.getAppointmentList()) {
                 appointmentListAppointmentToAttach = em.getReference(appointmentListAppointmentToAttach.getClass(), appointmentListAppointmentToAttach.getIdappointment());
                 attachedAppointmentList.add(appointmentListAppointmentToAttach);
             }
-            patient.setAppointmentList(attachedAppointmentList);
-            em.persist(patient);
+            doctor.setAppointmentList(attachedAppointmentList);
+            em.persist(doctor);
             if (idperson != null) {
-                idperson.getPatientList().add(patient);
+                idperson.getDoctorList().add(doctor);
                 idperson = em.merge(idperson);
             }
-            for (Image imageListImage : patient.getImageList()) {
-                Patient oldIdpatientOfImageListImage = imageListImage.getIdpatient();
-                imageListImage.setIdpatient(patient);
+            for (Image imageListImage : doctor.getImageList()) {
+                Doctor oldIddoctorOfImageListImage = imageListImage.getIddoctor();
+                imageListImage.setIddoctor(doctor);
                 imageListImage = em.merge(imageListImage);
-                if (oldIdpatientOfImageListImage != null) {
-                    oldIdpatientOfImageListImage.getImageList().remove(imageListImage);
-                    oldIdpatientOfImageListImage = em.merge(oldIdpatientOfImageListImage);
+                if (oldIddoctorOfImageListImage != null) {
+                    oldIddoctorOfImageListImage.getImageList().remove(imageListImage);
+                    oldIddoctorOfImageListImage = em.merge(oldIddoctorOfImageListImage);
                 }
             }
-            for (Appointment appointmentListAppointment : patient.getAppointmentList()) {
-                Patient oldIdpatientOfAppointmentListAppointment = appointmentListAppointment.getIdpatient();
-                appointmentListAppointment.setIdpatient(patient);
+            for (Appointment appointmentListAppointment : doctor.getAppointmentList()) {
+                Doctor oldIddoctorOfAppointmentListAppointment = appointmentListAppointment.getIddoctor();
+                appointmentListAppointment.setIddoctor(doctor);
                 appointmentListAppointment = em.merge(appointmentListAppointment);
-                if (oldIdpatientOfAppointmentListAppointment != null) {
-                    oldIdpatientOfAppointmentListAppointment.getAppointmentList().remove(appointmentListAppointment);
-                    oldIdpatientOfAppointmentListAppointment = em.merge(oldIdpatientOfAppointmentListAppointment);
+                if (oldIddoctorOfAppointmentListAppointment != null) {
+                    oldIddoctorOfAppointmentListAppointment.getAppointmentList().remove(appointmentListAppointment);
+                    oldIddoctorOfAppointmentListAppointment = em.merge(oldIddoctorOfAppointmentListAppointment);
                 }
             }
             em.getTransaction().commit();
@@ -95,25 +95,25 @@ public class PatientJpaController implements Serializable {
         }
     }
 
-    public void edit(Patient patient) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Doctor doctor) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Patient persistentPatient = em.find(Patient.class, patient.getIdpatient());
-            Person idpersonOld = persistentPatient.getIdperson();
-            Person idpersonNew = patient.getIdperson();
-            List<Image> imageListOld = persistentPatient.getImageList();
-            List<Image> imageListNew = patient.getImageList();
-            List<Appointment> appointmentListOld = persistentPatient.getAppointmentList();
-            List<Appointment> appointmentListNew = patient.getAppointmentList();
+            Doctor persistentDoctor = em.find(Doctor.class, doctor.getIddoctor());
+            Person idpersonOld = persistentDoctor.getIdperson();
+            Person idpersonNew = doctor.getIdperson();
+            List<Image> imageListOld = persistentDoctor.getImageList();
+            List<Image> imageListNew = doctor.getImageList();
+            List<Appointment> appointmentListOld = persistentDoctor.getAppointmentList();
+            List<Appointment> appointmentListNew = doctor.getAppointmentList();
             List<String> illegalOrphanMessages = null;
             for (Appointment appointmentListOldAppointment : appointmentListOld) {
                 if (!appointmentListNew.contains(appointmentListOldAppointment)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Appointment " + appointmentListOldAppointment + " since its idpatient field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Appointment " + appointmentListOldAppointment + " since its iddoctor field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -121,7 +121,7 @@ public class PatientJpaController implements Serializable {
             }
             if (idpersonNew != null) {
                 idpersonNew = em.getReference(idpersonNew.getClass(), idpersonNew.getIdperson());
-                patient.setIdperson(idpersonNew);
+                doctor.setIdperson(idpersonNew);
             }
             List<Image> attachedImageListNew = new ArrayList<Image>();
             for (Image imageListNewImageToAttach : imageListNew) {
@@ -129,48 +129,48 @@ public class PatientJpaController implements Serializable {
                 attachedImageListNew.add(imageListNewImageToAttach);
             }
             imageListNew = attachedImageListNew;
-            patient.setImageList(imageListNew);
+            doctor.setImageList(imageListNew);
             List<Appointment> attachedAppointmentListNew = new ArrayList<Appointment>();
             for (Appointment appointmentListNewAppointmentToAttach : appointmentListNew) {
                 appointmentListNewAppointmentToAttach = em.getReference(appointmentListNewAppointmentToAttach.getClass(), appointmentListNewAppointmentToAttach.getIdappointment());
                 attachedAppointmentListNew.add(appointmentListNewAppointmentToAttach);
             }
             appointmentListNew = attachedAppointmentListNew;
-            patient.setAppointmentList(appointmentListNew);
-            patient = em.merge(patient);
+            doctor.setAppointmentList(appointmentListNew);
+            doctor = em.merge(doctor);
             if (idpersonOld != null && !idpersonOld.equals(idpersonNew)) {
-                idpersonOld.getPatientList().remove(patient);
+                idpersonOld.getDoctorList().remove(doctor);
                 idpersonOld = em.merge(idpersonOld);
             }
             if (idpersonNew != null && !idpersonNew.equals(idpersonOld)) {
-                idpersonNew.getPatientList().add(patient);
+                idpersonNew.getDoctorList().add(doctor);
                 idpersonNew = em.merge(idpersonNew);
             }
             for (Image imageListOldImage : imageListOld) {
                 if (!imageListNew.contains(imageListOldImage)) {
-                    imageListOldImage.setIdpatient(null);
+                    imageListOldImage.setIddoctor(null);
                     imageListOldImage = em.merge(imageListOldImage);
                 }
             }
             for (Image imageListNewImage : imageListNew) {
                 if (!imageListOld.contains(imageListNewImage)) {
-                    Patient oldIdpatientOfImageListNewImage = imageListNewImage.getIdpatient();
-                    imageListNewImage.setIdpatient(patient);
+                    Doctor oldIddoctorOfImageListNewImage = imageListNewImage.getIddoctor();
+                    imageListNewImage.setIddoctor(doctor);
                     imageListNewImage = em.merge(imageListNewImage);
-                    if (oldIdpatientOfImageListNewImage != null && !oldIdpatientOfImageListNewImage.equals(patient)) {
-                        oldIdpatientOfImageListNewImage.getImageList().remove(imageListNewImage);
-                        oldIdpatientOfImageListNewImage = em.merge(oldIdpatientOfImageListNewImage);
+                    if (oldIddoctorOfImageListNewImage != null && !oldIddoctorOfImageListNewImage.equals(doctor)) {
+                        oldIddoctorOfImageListNewImage.getImageList().remove(imageListNewImage);
+                        oldIddoctorOfImageListNewImage = em.merge(oldIddoctorOfImageListNewImage);
                     }
                 }
             }
             for (Appointment appointmentListNewAppointment : appointmentListNew) {
                 if (!appointmentListOld.contains(appointmentListNewAppointment)) {
-                    Patient oldIdpatientOfAppointmentListNewAppointment = appointmentListNewAppointment.getIdpatient();
-                    appointmentListNewAppointment.setIdpatient(patient);
+                    Doctor oldIddoctorOfAppointmentListNewAppointment = appointmentListNewAppointment.getIddoctor();
+                    appointmentListNewAppointment.setIddoctor(doctor);
                     appointmentListNewAppointment = em.merge(appointmentListNewAppointment);
-                    if (oldIdpatientOfAppointmentListNewAppointment != null && !oldIdpatientOfAppointmentListNewAppointment.equals(patient)) {
-                        oldIdpatientOfAppointmentListNewAppointment.getAppointmentList().remove(appointmentListNewAppointment);
-                        oldIdpatientOfAppointmentListNewAppointment = em.merge(oldIdpatientOfAppointmentListNewAppointment);
+                    if (oldIddoctorOfAppointmentListNewAppointment != null && !oldIddoctorOfAppointmentListNewAppointment.equals(doctor)) {
+                        oldIddoctorOfAppointmentListNewAppointment.getAppointmentList().remove(appointmentListNewAppointment);
+                        oldIddoctorOfAppointmentListNewAppointment = em.merge(oldIddoctorOfAppointmentListNewAppointment);
                     }
                 }
             }
@@ -178,9 +178,9 @@ public class PatientJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = patient.getIdpatient();
-                if (findPatient(id) == null) {
-                    throw new NonexistentEntityException("The patient with id " + id + " no longer exists.");
+                Integer id = doctor.getIddoctor();
+                if (findDoctor(id) == null) {
+                    throw new NonexistentEntityException("The doctor with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -196,35 +196,35 @@ public class PatientJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Patient patient;
+            Doctor doctor;
             try {
-                patient = em.getReference(Patient.class, id);
-                patient.getIdpatient();
+                doctor = em.getReference(Doctor.class, id);
+                doctor.getIddoctor();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The patient with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The doctor with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Appointment> appointmentListOrphanCheck = patient.getAppointmentList();
+            List<Appointment> appointmentListOrphanCheck = doctor.getAppointmentList();
             for (Appointment appointmentListOrphanCheckAppointment : appointmentListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Patient (" + patient + ") cannot be destroyed since the Appointment " + appointmentListOrphanCheckAppointment + " in its appointmentList field has a non-nullable idpatient field.");
+                illegalOrphanMessages.add("This Doctor (" + doctor + ") cannot be destroyed since the Appointment " + appointmentListOrphanCheckAppointment + " in its appointmentList field has a non-nullable iddoctor field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Person idperson = patient.getIdperson();
+            Person idperson = doctor.getIdperson();
             if (idperson != null) {
-                idperson.getPatientList().remove(patient);
+                idperson.getDoctorList().remove(doctor);
                 idperson = em.merge(idperson);
             }
-            List<Image> imageList = patient.getImageList();
+            List<Image> imageList = doctor.getImageList();
             for (Image imageListImage : imageList) {
-                imageListImage.setIdpatient(null);
+                imageListImage.setIddoctor(null);
                 imageListImage = em.merge(imageListImage);
             }
-            em.remove(patient);
+            em.remove(doctor);
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -233,19 +233,19 @@ public class PatientJpaController implements Serializable {
         }
     }
 
-    public List<Patient> findPatientEntities() {
-        return findPatientEntities(true, -1, -1);
+    public List<Doctor> findDoctorEntities() {
+        return findDoctorEntities(true, -1, -1);
     }
 
-    public List<Patient> findPatientEntities(int maxResults, int firstResult) {
-        return findPatientEntities(false, maxResults, firstResult);
+    public List<Doctor> findDoctorEntities(int maxResults, int firstResult) {
+        return findDoctorEntities(false, maxResults, firstResult);
     }
 
-    private List<Patient> findPatientEntities(boolean all, int maxResults, int firstResult) {
+    private List<Doctor> findDoctorEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Patient.class));
+            cq.select(cq.from(Doctor.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -257,20 +257,20 @@ public class PatientJpaController implements Serializable {
         }
     }
 
-    public Patient findPatient(Integer id) {
+    public Doctor findDoctor(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Patient.class, id);
+            return em.find(Doctor.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getPatientCount() {
+    public int getDoctorCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Patient> rt = cq.from(Patient.class);
+            Root<Doctor> rt = cq.from(Doctor.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

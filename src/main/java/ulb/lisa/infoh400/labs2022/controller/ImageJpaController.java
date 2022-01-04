@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ulb.lisa.infoh400.labs2020.controller;
+package ulb.lisa.infoh400.labs2022.controller;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,11 +13,11 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import ulb.lisa.infoh400.labs2020.controller.exceptions.NonexistentEntityException;
-import ulb.lisa.infoh400.labs2020.model.Appointment;
-import ulb.lisa.infoh400.labs2020.model.Doctor;
-import ulb.lisa.infoh400.labs2020.model.Image;
-import ulb.lisa.infoh400.labs2020.model.Patient;
+import ulb.lisa.infoh400.labs2022.controller.exceptions.NonexistentEntityException;
+import ulb.lisa.infoh400.labs2022.model.Appointment;
+import ulb.lisa.infoh400.labs2022.model.Doctor;
+import ulb.lisa.infoh400.labs2022.model.Image;
+import ulb.lisa.infoh400.labs2022.model.Patient;
 
 /**
  *

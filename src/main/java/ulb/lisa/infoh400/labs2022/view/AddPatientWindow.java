@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ulb.lisa.infoh400.labs2020.view;
+package ulb.lisa.infoh400.labs2022.view;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ulb.lisa.infoh400.labs2020.controller.PatientJpaController;
-import ulb.lisa.infoh400.labs2020.controller.PersonJpaController;
-import ulb.lisa.infoh400.labs2020.controller.exceptions.IllegalOrphanException;
-import ulb.lisa.infoh400.labs2020.controller.exceptions.NonexistentEntityException;
-import ulb.lisa.infoh400.labs2020.model.Patient;
+import ulb.lisa.infoh400.labs2022.controller.PatientJpaController;
+import ulb.lisa.infoh400.labs2022.controller.PersonJpaController;
+import ulb.lisa.infoh400.labs2022.controller.exceptions.IllegalOrphanException;
+import ulb.lisa.infoh400.labs2022.controller.exceptions.NonexistentEntityException;
+import ulb.lisa.infoh400.labs2022.model.Patient;
 
 /**
  *
@@ -69,7 +69,7 @@ public class AddPatientWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        addPersonPanel = new ulb.lisa.infoh400.labs2020.view.AddPersonPanel();
+        addPersonPanel = new ulb.lisa.infoh400.labs2022.view.AddPersonPanel();
         jLabel2 = new javax.swing.JLabel();
         phonenumberTextField = new javax.swing.JTextField();
         saveButton = new javax.swing.JButton();
@@ -187,7 +187,7 @@ public class AddPatientWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_saveButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ulb.lisa.infoh400.labs2020.view.AddPersonPanel addPersonPanel;
+    private ulb.lisa.infoh400.labs2022.view.AddPersonPanel addPersonPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

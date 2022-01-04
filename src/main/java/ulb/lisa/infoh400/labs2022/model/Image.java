@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ulb.lisa.infoh400.labs2020.model;
+package ulb.lisa.infoh400.labs2022.model;
 
 import java.io.Serializable;
 import javax.persistence.Basic;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ulb.lisa.infoh400.labs2020.view;
+package ulb.lisa.infoh400.labs2022.view;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -12,12 +12,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ulb.lisa.infoh400.labs2020.controller.DoctorJpaController;
-import ulb.lisa.infoh400.labs2020.controller.PatientJpaController;
-import ulb.lisa.infoh400.labs2020.controller.exceptions.IllegalOrphanException;
-import ulb.lisa.infoh400.labs2020.controller.exceptions.NonexistentEntityException;
-import ulb.lisa.infoh400.labs2020.model.Doctor;
-import ulb.lisa.infoh400.labs2020.model.Patient;
+import ulb.lisa.infoh400.labs2022.controller.DoctorJpaController;
+import ulb.lisa.infoh400.labs2022.controller.PatientJpaController;
+import ulb.lisa.infoh400.labs2022.controller.exceptions.IllegalOrphanException;
+import ulb.lisa.infoh400.labs2022.controller.exceptions.NonexistentEntityException;
+import ulb.lisa.infoh400.labs2022.model.Doctor;
+import ulb.lisa.infoh400.labs2022.model.Patient;
 
 /**
  *

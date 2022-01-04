@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ulb.lisa.infoh400.labs2020.view;
+package ulb.lisa.infoh400.labs2022.view;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ulb.lisa.infoh400.labs2020.model.Person;
+import ulb.lisa.infoh400.labs2022.model.Person;
 
 /**
  *
