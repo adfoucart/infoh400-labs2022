@@ -146,7 +146,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         addDoctorButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/noun_add_3029252.png"))); // NOI18N
-        addDoctorButton.setEnabled(false);
         addDoctorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addDoctorButtonActionPerformed(evt);
@@ -181,6 +180,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         editDoctorButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/noun_edit_3029255.png"))); // NOI18N
         editDoctorButton.setEnabled(false);
+        editDoctorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editDoctorButtonActionPerformed(evt);
+            }
+        });
 
         editAppointmentButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/noun_edit_3029255.png"))); // NOI18N
         editAppointmentButton.setEnabled(false);
@@ -201,6 +205,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         deleteDoctorButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/noun_Delete_756859.png"))); // NOI18N
         deleteDoctorButton.setEnabled(false);
+        deleteDoctorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteDoctorButtonActionPerformed(evt);
+            }
+        });
 
         deleteImageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/noun_Delete_756859.png"))); // NOI18N
         deleteImageButton.setEnabled(false);
@@ -334,7 +343,8 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_addPatientButtonActionPerformed
 
     private void addDoctorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDoctorButtonActionPerformed
-        // TODO add your handling code here:
+        AddDoctorWindow doctorAddPopup = new AddDoctorWindow();
+        doctorAddPopup.setVisible(true);
     }//GEN-LAST:event_addDoctorButtonActionPerformed
 
     private void addAppointmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAppointmentButtonActionPerformed
@@ -383,8 +393,8 @@ public class MainWindow extends javax.swing.JFrame {
         refreshDoctorList();
         
         disableButtons();
-        //editDoctorButton.setEnabled(true);
-        //deleteDoctorButton.setEnabled(true);
+        editDoctorButton.setEnabled(true);
+        deleteDoctorButton.setEnabled(true);
     }//GEN-LAST:event_listDoctorsButtonActionPerformed
 
     private void editPatientButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPatientButtonActionPerformed
@@ -417,11 +427,47 @@ public class MainWindow extends javax.swing.JFrame {
             LOGGER.debug("Deleting patient with id: " + selected.getIdpatient());
             patientCtrl.destroy(selected.getIdpatient());
         } catch (IllegalOrphanException | NonexistentEntityException ex) {
-            LOGGER.error("Failed to delete patient", ex);
+            LOGGER.error("Failed to delete patient with id: " + selected.getIdpatient(), ex);
         }
         
         refreshPatientList();
     }//GEN-LAST:event_deletePatientButtonActionPerformed
+
+    private void editDoctorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDoctorButtonActionPerformed
+        if( itemsList.getSelectedIndex() < 0 ){
+            return;
+        }
+        EntityListModel<Doctor> model = (EntityListModel) itemsList.getModel();
+        Doctor selected = model.getList().get(itemsList.getSelectedIndex());
+        
+        AddDoctorWindow doctorAddPopup = new AddDoctorWindow();
+        doctorAddPopup.setDoctor(selected);
+        doctorAddPopup.setVisible(true);
+        
+        doctorAddPopup.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent evt){
+                refreshDoctorList();
+            }
+        });
+    }//GEN-LAST:event_editDoctorButtonActionPerformed
+
+    private void deleteDoctorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteDoctorButtonActionPerformed
+        if( itemsList.getSelectedIndex() < 0 ){
+            return;
+        }
+        EntityListModel<Doctor> model = (EntityListModel) itemsList.getModel();
+        Doctor selected = model.getList().get(itemsList.getSelectedIndex());
+        
+        try {
+            LOGGER.debug("Deleting doctor with id: " + selected.getIddoctor());
+            patientCtrl.destroy(selected.getIddoctor());
+        } catch (IllegalOrphanException | NonexistentEntityException ex) {
+            LOGGER.error("Failed to delete doctor with id: " + selected.getIddoctor(), ex);
+        }
+        
+        refreshPatientList();
+    }//GEN-LAST:event_deleteDoctorButtonActionPerformed
        
     /**
      * @param args the command line arguments
