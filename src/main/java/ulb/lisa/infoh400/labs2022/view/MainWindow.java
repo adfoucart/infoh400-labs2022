@@ -7,7 +7,9 @@ package ulb.lisa.infoh400.labs2022.view;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +22,7 @@ import ulb.lisa.infoh400.labs2022.controller.exceptions.NonexistentEntityExcepti
 import ulb.lisa.infoh400.labs2022.model.Doctor;
 import ulb.lisa.infoh400.labs2022.model.Image;
 import ulb.lisa.infoh400.labs2022.model.Patient;
-import ulb.lisa.infoh400.labs2022.services.DicomInstanceServices;
+import ulb.lisa.infoh400.labs2022.services.DicomProviderServices;
 
 /**
  *
@@ -32,6 +34,8 @@ public class MainWindow extends javax.swing.JFrame {
     private final PatientJpaController patientCtrl = new PatientJpaController(emfac);
     private final DoctorJpaController doctorCtrl = new DoctorJpaController(emfac);
     private final ImageJpaController imageCtrl = new ImageJpaController(emfac);
+    
+    DicomProviderServices dps;
     
     private static final Logger LOGGER = LogManager.getLogger(MainWindow.class.getName());
     
@@ -81,6 +85,7 @@ public class MainWindow extends javax.swing.JFrame {
         deleteAppointmentButton = new javax.swing.JButton();
         deleteDoctorButton = new javax.swing.JButton();
         deleteImageButton = new javax.swing.JButton();
+        startSCPButton = new javax.swing.JButton();
 
         doctorTextLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         doctorTextLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -226,6 +231,13 @@ public class MainWindow extends javax.swing.JFrame {
         deleteImageButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/noun_Delete_756859.png"))); // NOI18N
         deleteImageButton.setEnabled(false);
 
+        startSCPButton.setText("Start SCP");
+        startSCPButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startSCPButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -289,6 +301,8 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(ImageImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ImageTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(startSCPButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -334,7 +348,8 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(listAppointmentsButton)
                             .addComponent(addAppointmentButton)
                             .addComponent(listImagesButton)
-                            .addComponent(addImageButton))
+                            .addComponent(addImageButton)
+                            .addComponent(startSCPButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(editAppointmentButton)
@@ -508,6 +523,20 @@ public class MainWindow extends javax.swing.JFrame {
             imagePopup.setVisible(true);
         }
     }//GEN-LAST:event_itemsListMouseClicked
+
+    private void startSCPButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSCPButtonActionPerformed
+        if( dps == null )
+            dps = new DicomProviderServices("HISSCP", 11113, new File("e:/data/localpacs"));
+        
+        if( dps.isReceiverThreadRunning() ){
+            dps.stopSCPService();
+            startSCPButton.setText("Start SCP");
+        }
+        else{
+            dps.startSCPService();
+            startSCPButton.setText("Stop SCP");
+        }
+    }//GEN-LAST:event_startSCPButtonActionPerformed
        
     /**
      * @param args the command line arguments
@@ -575,6 +604,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton listPatientsButton;
     private javax.swing.JLabel patientImageLabel;
     private javax.swing.JLabel patientTextLabel;
+    private javax.swing.JButton startSCPButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }

@@ -123,6 +123,4 @@ public class DicomInstanceServices {
         
         return false;
     }
-    
-    
 }

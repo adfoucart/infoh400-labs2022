@@ -127,6 +127,8 @@
                       </Group>
                   </Group>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="startSCPButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -185,6 +187,7 @@
                           <Component id="addAppointmentButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="listImagesButton" min="-2" max="-2" attributes="0"/>
                           <Component id="addImageButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="startSCPButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
@@ -458,6 +461,14 @@
         </Property>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="startSCPButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Start SCP"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startSCPButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
