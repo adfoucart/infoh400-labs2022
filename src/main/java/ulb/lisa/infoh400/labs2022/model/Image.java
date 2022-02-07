@@ -158,7 +158,7 @@ public class Image implements Serializable {
 
     @Override
     public String toString() {
-        return "ulb.lisa.infoh400.labs2020.model.Image[ idimage=" + idimage + " ]";
+        return instanceuid + " (" + patientDicomIdentifier + ")";
     }
     
 }
