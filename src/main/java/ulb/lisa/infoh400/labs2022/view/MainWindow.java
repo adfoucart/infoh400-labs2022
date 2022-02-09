@@ -9,7 +9,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +22,7 @@ import ulb.lisa.infoh400.labs2022.model.Doctor;
 import ulb.lisa.infoh400.labs2022.model.Image;
 import ulb.lisa.infoh400.labs2022.model.Patient;
 import ulb.lisa.infoh400.labs2022.services.DicomProviderServices;
+import ulb.lisa.infoh400.labs2022.services.HL7Services;
 
 /**
  *
@@ -36,6 +36,7 @@ public class MainWindow extends javax.swing.JFrame {
     private final ImageJpaController imageCtrl = new ImageJpaController(emfac);
     
     DicomProviderServices dps;
+    HL7Services hl7s;
     
     private static final Logger LOGGER = LogManager.getLogger(MainWindow.class.getName());
     
@@ -86,6 +87,7 @@ public class MainWindow extends javax.swing.JFrame {
         deleteDoctorButton = new javax.swing.JButton();
         deleteImageButton = new javax.swing.JButton();
         startSCPButton = new javax.swing.JButton();
+        startHL7Button = new javax.swing.JButton();
 
         doctorTextLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         doctorTextLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -238,6 +240,13 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        startHL7Button.setText("Start HL7");
+        startHL7Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startHL7ButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -302,7 +311,9 @@ public class MainWindow extends javax.swing.JFrame {
                                     .addComponent(ImageImageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ImageTextLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(startSCPButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(startSCPButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(startHL7Button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -348,14 +359,17 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(listAppointmentsButton)
                             .addComponent(addAppointmentButton)
                             .addComponent(listImagesButton)
-                            .addComponent(addImageButton)
-                            .addComponent(startSCPButton))
+                            .addComponent(addImageButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(editAppointmentButton)
                             .addComponent(deleteAppointmentButton)
                             .addComponent(editImageButton, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(deleteImageButton, javax.swing.GroupLayout.Alignment.LEADING))))
+                            .addComponent(deleteImageButton, javax.swing.GroupLayout.Alignment.LEADING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(startSCPButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(startHL7Button)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                 .addContainerGap())
@@ -541,6 +555,22 @@ public class MainWindow extends javax.swing.JFrame {
             startSCPButton.setText("Stop SCP");
         }
     }//GEN-LAST:event_startSCPButtonActionPerformed
+
+    private void startHL7ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startHL7ButtonActionPerformed
+        if( hl7s == null ){
+            hl7s = new HL7Services();
+        }
+        
+        if( hl7s.isListeningToHL7() ){
+            hl7s.stopHL7Listener();
+            startHL7Button.setText("Start HL7");
+        }
+        else{
+            startHL7Button.setText("Starting");
+            hl7s.startHL7Listener(54321);
+            startHL7Button.setText("Stop HL7");
+        }
+    }//GEN-LAST:event_startHL7ButtonActionPerformed
        
     /**
      * @param args the command line arguments
@@ -608,6 +638,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton listPatientsButton;
     private javax.swing.JLabel patientImageLabel;
     private javax.swing.JLabel patientTextLabel;
+    private javax.swing.JButton startHL7Button;
     private javax.swing.JButton startSCPButton;
     private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables

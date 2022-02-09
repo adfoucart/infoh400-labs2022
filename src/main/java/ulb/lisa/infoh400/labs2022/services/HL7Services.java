@@ -9,6 +9,7 @@ import ca.uhn.hl7v2.DefaultHapiContext;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.HapiContext;
 import ca.uhn.hl7v2.app.Connection;
+import ca.uhn.hl7v2.app.HL7Service;
 import ca.uhn.hl7v2.app.Initiator;
 import ca.uhn.hl7v2.llp.LLPException;
 import ca.uhn.hl7v2.model.DataTypeException;
@@ -18,10 +19,20 @@ import ca.uhn.hl7v2.model.v24.message.ADT_A01;
 import ca.uhn.hl7v2.model.v24.segment.MSH;
 import ca.uhn.hl7v2.model.v24.segment.PID;
 import ca.uhn.hl7v2.parser.Parser;
+import ca.uhn.hl7v2.protocol.ReceivingApplication;
+import ca.uhn.hl7v2.protocol.ReceivingApplicationException;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
+import java.util.logging.Level;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ulb.lisa.infoh400.labs2022.controller.PatientJpaController;
+import ulb.lisa.infoh400.labs2022.controller.PersonJpaController;
 import ulb.lisa.infoh400.labs2022.model.Patient;
+import ulb.lisa.infoh400.labs2022.model.Person;
 
 /**
  *
@@ -29,6 +40,8 @@ import ulb.lisa.infoh400.labs2022.model.Patient;
  */
 public class HL7Services {
     private static final Logger LOGGER = LogManager.getLogger(HL7Services.class.getName());
+
+    private HL7Service hl7Listener; 
     
     public enum SendADTResults {
         SUCCESS, FAILED_TO_CREATE, FAILED_TO_SEND, OTHER_FAILURE
@@ -122,6 +135,87 @@ public class HL7Services {
         }
         
         return null;
+    }
+    
+    public void startHL7Listener(int port){
+        LOGGER.debug("Starting HL7 Listener.");
+        if( hl7Listener == null ){
+            HapiContext ctxt = new DefaultHapiContext();
+            hl7Listener = ctxt.newServer(port, false);
+        }
+        
+        if( isListeningToHL7() ){
+            LOGGER.debug("HL7 Server is already running.");
+            return;
+        }
+        
+        ReceivingApplication<ADT_A01> handler = new ADTReceiverApplication();
+        hl7Listener.registerApplication("ADT", "A01", handler);
+        try {
+            hl7Listener.startAndWait();
+        } catch (InterruptedException ex) {
+            LOGGER.debug("Interrupted HL7 Listener");
+        }
+        
+        LOGGER.debug("HL7 Server is started.");
+    }
+    
+    public void stopHL7Listener(){
+        hl7Listener.stop();
+    }
+    
+    public boolean isListeningToHL7(){        
+        return ( hl7Listener != null && hl7Listener.isRunning() );
+    }
+    
+    private class ADTReceiverApplication implements ReceivingApplication<ADT_A01> {
+        
+        private final EntityManagerFactory emfac = Persistence.createEntityManagerFactory("infoh400_PU");
+        private final PersonJpaController personCtrl = new PersonJpaController(emfac);
+        private final PatientJpaController patientCtrl = new PatientJpaController(emfac);
+    
+
+        @Override
+        public Message processMessage(ADT_A01 t, Map<String, Object> map) throws ReceivingApplicationException, HL7Exception {
+            String encodedMessage = new DefaultHapiContext().getPipeParser().encode(t);
+            System.out.println("Received message:\n" + encodedMessage + "\n\n");
+            
+            String firstName = t.getPID().getPatientName(0).getGivenName().getValue();
+            String lastName = t.getPID().getPatientName(0).getFamilyName().getSurname().getValue();
+            Date dateOfBirth = t.getPID().getDateTimeOfBirth().getTimeOfAnEvent().getValueAsDate();
+            Person person = personCtrl.findDuplicate(firstName, lastName, dateOfBirth);
+            if( person == null ){
+                person = new Person();
+                person.setDateofbirth(dateOfBirth);
+                person.setFamilyname(lastName);
+                person.setFirstname(firstName);
+                
+                personCtrl.create(person);
+                
+                Patient patient = new Patient();
+                patient.setIdperson(person);
+                patient.setStatus("active");
+                
+                patientCtrl.create(patient);
+                
+                LOGGER.info("Created new patient from HL7 message.");
+            }
+            else {
+                LOGGER.info("Duplicate patient found: not adding.");
+            }
+
+            try {
+                return t.generateACK();
+            } catch (IOException e) {
+                throw new HL7Exception(e);
+            }
+        }
+
+        @Override
+        public boolean canProcess(ADT_A01 t) {
+            return true;
+        }
+        
     }
     
 }
