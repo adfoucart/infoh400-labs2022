@@ -510,12 +510,12 @@ public class MainWindow extends javax.swing.JFrame {
         
         try {
             LOGGER.debug("Deleting doctor with id: " + selected.getIddoctor());
-            patientCtrl.destroy(selected.getIddoctor());
+            doctorCtrl.destroy(selected.getIddoctor());
         } catch (IllegalOrphanException | NonexistentEntityException ex) {
             LOGGER.error("Failed to delete doctor with id: " + selected.getIddoctor(), ex);
         }
         
-        refreshPatientList();
+        refreshDoctorList();
     }//GEN-LAST:event_deleteDoctorButtonActionPerformed
 
     private void listImagesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listImagesButtonActionPerformed
