@@ -20,6 +20,7 @@ import ulb.lisa.infoh400.labs2022.controller.exceptions.NonexistentEntityExcepti
 import ulb.lisa.infoh400.labs2022.model.Doctor;
 import ulb.lisa.infoh400.labs2022.model.Image;
 import ulb.lisa.infoh400.labs2022.model.Patient;
+import ulb.lisa.infoh400.labs2022.services.DicomInstanceServices;
 
 /**
  *
@@ -174,6 +175,11 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        itemsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemsListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(itemsList);
 
         editPatientButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/noun_edit_3029255.png"))); // NOI18N
@@ -488,6 +494,20 @@ public class MainWindow extends javax.swing.JFrame {
         
         disableButtons();
     }//GEN-LAST:event_listImagesButtonActionPerformed
+
+    private void itemsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemsListMouseClicked
+        if( itemsList.getSelectedIndex() < 0 ){
+            return;
+        }
+        
+        EntityListModel model = (EntityListModel) itemsList.getModel();
+        Object selected = model.getList().get(itemsList.getSelectedIndex());
+        
+        if(evt.getClickCount() == 2 && selected.getClass().getSimpleName().equals("Image")){
+            DicomInstanceWindow imagePopup = new DicomInstanceWindow((Image) selected);
+            imagePopup.setVisible(true);
+        }
+    }//GEN-LAST:event_itemsListMouseClicked
        
     /**
      * @param args the command line arguments

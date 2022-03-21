@@ -28,17 +28,20 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane1" min="-2" pref="360" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane1" alignment="0" min="-2" pref="360" max="-2" attributes="0"/>
+                          <Component id="openDicomdirButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="saveImageResultLabel" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="saveImageToDatabaseButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="jScrollPane2" pref="387" max="32767" attributes="0"/>
                           <Component id="dicomImageLabel" max="32767" attributes="0"/>
                       </Group>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="openDicomdirButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="saveImageToDatabaseButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -50,10 +53,11 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="19" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="openDicomdirButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="saveImageToDatabaseButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="saveImageResultLabel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -143,6 +147,8 @@
         <Property name="text" type="java.lang.String" value="Image"/>
         <Property name="opaque" type="boolean" value="true"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="saveImageResultLabel">
     </Component>
   </SubComponents>
 </Form>
