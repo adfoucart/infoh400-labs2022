@@ -8,8 +8,10 @@ package ulb.lisa.infoh400.labs2022.services;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import java.util.ArrayList;
+import java.util.List;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.ContactPoint;
+import org.hl7.fhir.r4.model.IdType;
 import ulb.lisa.infoh400.labs2022.model.Patient;
 import ulb.lisa.infoh400.labs2022.model.Person;
 
@@ -33,6 +35,26 @@ public class FHIRServices {
         }
         
         return patient;
+    }
+    
+    public static org.hl7.fhir.r4.model.Patient getPatient(Patient patientInTable){
+        org.hl7.fhir.r4.model.Patient p = new org.hl7.fhir.r4.model.Patient();
+        p.addName().setFamily(patientInTable.getIdperson().getFamilyname());
+        p.getNameFirstRep().addGiven(patientInTable.getIdperson().getFirstname());
+        p.setBirthDate(patientInTable.getIdperson().getDateofbirth());
+        p.addTelecom().setValue(patientInTable.getPhonenumber());
+        p.setId(new IdType("Patient", String.valueOf(patientInTable.getIdpatient())));
+        
+        return p;
+    }
+    
+    public static ArrayList<org.hl7.fhir.r4.model.Patient> getPatients(List<Patient> patientsInTable){
+        ArrayList<org.hl7.fhir.r4.model.Patient> patients = new ArrayList();
+        for( Patient p: patientsInTable ){
+            patients.add(getPatient(p));
+        }
+        
+        return patients;
     }
     
     public ArrayList<Patient> searchPatient(String familyName, String fhirBase){
