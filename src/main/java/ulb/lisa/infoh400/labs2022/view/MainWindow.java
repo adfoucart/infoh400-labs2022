@@ -522,6 +522,10 @@ public class MainWindow extends javax.swing.JFrame {
             DicomInstanceWindow imagePopup = new DicomInstanceWindow((Image) selected);
             imagePopup.setVisible(true);
         }
+        else if(evt.getClickCount() == 2 && selected.getClass().getSimpleName().equals("Patient")){
+            HL7SendWindow hl7Popup = new HL7SendWindow((Patient) selected);
+            hl7Popup.setVisible(true);
+        }
     }//GEN-LAST:event_itemsListMouseClicked
 
     private void startSCPButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSCPButtonActionPerformed
