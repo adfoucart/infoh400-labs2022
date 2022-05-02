@@ -13,6 +13,7 @@ import javax.persistence.criteria.Root;
 import ulb.lisa.infoh400.labs2022.model.Doctor;
 import ulb.lisa.infoh400.labs2022.model.Patient;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -252,6 +253,20 @@ public class PersonJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+    
+    public Person findDuplicate(String firstName, String familyName, Date dateofbirth){
+        EntityManager em = getEntityManager();
+        List<Person> results = em.createNamedQuery("Person.findDuplicate")
+                .setParameter("firstname", firstName)
+                .setParameter("familyname", familyName)
+                .setParameter("dateofbirth", dateofbirth)
+                .getResultList();
+        if( results.isEmpty() ){
+            return null;
+        }
+        
+        return results.get(0);
     }
     
 }
