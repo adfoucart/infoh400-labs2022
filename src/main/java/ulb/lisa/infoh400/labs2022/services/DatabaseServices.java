@@ -5,19 +5,10 @@
  */
 package ulb.lisa.infoh400.labs2022.services;
 
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import ulb.lisa.infoh400.labs2022.controller.DoctorJpaController;
-import ulb.lisa.infoh400.labs2022.controller.ImageJpaController;
-import ulb.lisa.infoh400.labs2022.controller.PatientJpaController;
-import ulb.lisa.infoh400.labs2022.controller.PersonJpaController;
-import ulb.lisa.infoh400.labs2022.model.Doctor;
-import ulb.lisa.infoh400.labs2022.model.Image;
-import ulb.lisa.infoh400.labs2022.model.Patient;
-import ulb.lisa.infoh400.labs2022.model.Person;
 
 /**
  *
