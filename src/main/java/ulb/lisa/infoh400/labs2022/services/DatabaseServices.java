@@ -5,10 +5,13 @@
  */
 package ulb.lisa.infoh400.labs2022.services;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import ulb.lisa.infoh400.labs2022.controller.PatientJpaController;
+import ulb.lisa.infoh400.labs2022.model.Patient;
 
 /**
  *
@@ -16,6 +19,7 @@ import javax.persistence.Persistence;
  */
 public class DatabaseServices {
     private final EntityManagerFactory emfac = Persistence.createEntityManagerFactory("infoh400_PU");
+    PatientJpaController patientCtrl = new PatientJpaController(emfac);
     
     public DatabaseServices() {
         try {
@@ -27,5 +31,9 @@ public class DatabaseServices {
     
     public EntityManagerFactory getEntityManagerFactory(){
         return emfac;
+    }
+    
+    public List<Patient> findPatients(){
+        return patientCtrl.findPatientEntities();
     }
 }
