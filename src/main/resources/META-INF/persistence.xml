@@ -8,6 +8,7 @@
     <class>ulb.lisa.infoh400.labs2022.model.Appointment</class>
     <class>ulb.lisa.infoh400.labs2022.model.Doctor</class>
     <class>ulb.lisa.infoh400.labs2022.model.Image</class>
+    <class>ulb.lisa.infoh400.labs2022.model.User</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/infoh400?zeroDateTimeBehavior=convertToNull&amp;serverTimezone=Europe/Brussels"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
